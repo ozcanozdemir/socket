@@ -1,0 +1,8 @@
+{
+"reconnectionFlag":true,
+"ip:"172.16.50.159",
+"port":"1234",
+"number":10,
+"name":"Ozcan",
+"array":["isim",1,true]
+}

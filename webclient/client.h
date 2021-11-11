@@ -9,6 +9,10 @@
 #include<QTimer>
 using namespace std;
 #include <QUuid>
+#include <QAbstractSocket>
+#include <QThread>
+#include<QFile>
+#include "configjson.h"
 class cclient : public QObject
 {
     Q_OBJECT
@@ -17,13 +21,18 @@ public:
     ~cclient();
     void startConnection(QUrl url);
 
+    QString GetRandomString(int length) ;
+    void islemler();
+    void readFile();
+    void printFile(QString fileContent);
 
-private Q_SLOTS :
+
+public slots:
     void onConnected();
     void onTextMessageReceived(QString message);
     void closed();
-    QString GetRandomString(int length) ;
     void ReeConnection();
+    void onErrorOccured(QAbstractSocket::SocketError error);
 
 
 private:
@@ -32,6 +41,12 @@ private:
     QTimer *timer = new QTimer();
     int NameLength;
     bool isConnected = false;
+    char islem_yaniti;
+    int islem;
+    configjson config;
+    string message1;
+
+
 };
 
 #endif // CLIENT_H

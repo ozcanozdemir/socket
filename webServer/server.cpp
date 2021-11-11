@@ -21,21 +21,22 @@ Server::Server(QObject *parent) : QObject(parent)
 Server::~Server()
 {
     server->close();
-
 }
+
+
 
 void Server::newConnection()
 {
     qDebug()<<"newConnection";
     socket = server->nextPendingConnection();
     socket->sendTextMessage("baglandim");
-
     socket->setObjectName(QUuid::createUuid().toString());
 
     connect(socket,&QWebSocket::textMessageReceived,this,&Server::RecievedMessage);
      connect(socket,&QWebSocket::disconnected,this, &Server::ClientdisConnection);
 
      m_clients<<socket;
+
 }
 template<typename T>
 void print(QList<T>&v){
@@ -44,20 +45,12 @@ void print(QList<T>&v){
         qDebug()<<*i++<<" "<<endl;
 }
 
-
 void Server::RecievedMessage(QString message)
 {
     socket = qobject_cast<QWebSocket *>(sender());
-
-
-
     qDebug() << "Message from client: " << socket->objectName() << " : " << message;
 
-
-
 }
-
-
 
 void Server::ClientdisConnection()
 {
