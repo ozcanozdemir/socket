@@ -9,7 +9,8 @@ using namespace std;
 cclient::cclient(const QUrl &url, QObject *parent) : QObject(parent), m_url(url)
 {
     config.jsonOp();
-    startConnection(url);
+    startConnection(config.ipadres);
+
 }
 cclient::~cclient()
 {
@@ -18,11 +19,11 @@ cclient::~cclient()
 
 void cclient::startConnection(QUrl url)
 {
-    qDebug() << "Connecting to webSocket server: " << url;
+    qDebug() << "Connecting to webSocket server: " << config.ipadres;
     m_websocket = new QWebSocket;
     connect(m_websocket, &QWebSocket::connected, this, &cclient::onConnected);
     connect(m_websocket, &QWebSocket::disconnected, this, &cclient::closed);
-     m_websocket->open(url);
+     m_websocket->open(config.ipadres);
      if(!connect(m_websocket,SIGNAL(error(const QAbstractSocket::SocketError&)),this,SLOT(onErrorOccured(QAbstractSocket::SocketError))))
      {
          qDebug() << "error!";
@@ -31,9 +32,11 @@ void cclient::startConnection(QUrl url)
      {
          isConnected=true;
          connect(m_websocket, &QWebSocket::textMessageReceived,this, &cclient::onTextMessageReceived);
+
+
      }
-     qDebug()<<"qdebug: start connection";
-//     qDebug()<< "cclient class ından gelen flag değeri: " << config.flag;
+     qDebug()<<"start connection";
+//    qDebug()<< "cclient class ından gelen flag değeri: " << config.flag;
 }
 void cclient::closed()
 {
@@ -61,17 +64,22 @@ QString cclient::GetRandomString(int length)
 }
 void cclient::onConnected()
 {
-    m_websocket->sendTextMessage(GetRandomString(5));
+    m_websocket->sendTextMessage("my name "+GetRandomString(5));
         qDebug() << "WebSocket connected";
+        xx=false;
 
 }
 void cclient::onTextMessageReceived(QString message)
-{
+{       if(xx==false){
         qDebug() << "Message received:" << message;
-        islemler();
-}
+        xx=true;
+    }
+    islemler();
+
+ }
 void cclient::islemler()
 {
+    if (xx==true) {
     cout<<"client icin islem yapmak ister misin  (Y/N)"<<endl;
     cin>>islem_yaniti;
 
@@ -83,26 +91,36 @@ if(islem_yaniti=='Y')
     if(islem==1)
         m_websocket->close();
     if(islem==2){
-        while (true) {
-
             cout<< "mesajınızı yazınız"<<endl;
-
             cin>>message1;
+            //cout<< "cikmak icin x e basın"<<endl;
             if(message1!="x"){
                 m_websocket->sendTextMessage(QString::fromStdString( message1));
-            }
-            else
-                break;
+                //dummy();
 
-        }
+            }
+
+}
+}
 }
 //        while( getline(in,str,':')
 //        {
 //        getline(str,'\n');
 //        int var = atoi(str.c_str());
-//        }
+    //        }
 }
+
+void cclient::dummy()
+{
+    string a;
+    do
+    {
+        cout << "göndermek istediğiniz mesajı yaziniz" << endl;
+        cin>>a;
+        m_websocket->sendTextMessage(QString::fromStdString(a));
+    }while(&QWebSocket::textMessageReceived);
 }
+
 
 void cclient::ReeConnection()
 {
@@ -128,6 +146,11 @@ void cclient::onErrorOccured(QAbstractSocket::SocketError error)
     m_websocket->close();
     QThread::msleep(3000);
     ReeConnection();
+}
+
+void cclient::messageOp()
+{
+
 }
 
 

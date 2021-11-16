@@ -30,7 +30,7 @@ void Server::newConnection()
     qDebug()<<"newConnection";
     socket = server->nextPendingConnection();
     socket->sendTextMessage("baglandim");
-    socket->setObjectName(QUuid::createUuid().toString());
+   // socket->setObjectName(QUuid::createUuid().toString());
 
     connect(socket,&QWebSocket::textMessageReceived,this,&Server::RecievedMessage);
      connect(socket,&QWebSocket::disconnected,this, &Server::ClientdisConnection);
@@ -48,8 +48,8 @@ void print(QList<T>&v){
 void Server::RecievedMessage(QString message)
 {
     socket = qobject_cast<QWebSocket *>(sender());
-    qDebug() << "Message from client: " << socket->objectName() << " : " << message;
-
+    socket->setObjectName(message);
+    qDebug()<< socket->objectName();
 }
 
 void Server::ClientdisConnection()

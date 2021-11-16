@@ -26,6 +26,8 @@ public:
     void readFile();
     void printFile(QString fileContent);
 
+    void dummy();
+
 
 public slots:
     void onConnected();
@@ -33,6 +35,9 @@ public slots:
     void closed();
     void ReeConnection();
     void onErrorOccured(QAbstractSocket::SocketError error);
+    void messageOp();
+
+
 
 
 private:
@@ -45,6 +50,7 @@ private:
     int islem;
     configjson config;
     string message1;
+    bool xx;
 
 
 };
